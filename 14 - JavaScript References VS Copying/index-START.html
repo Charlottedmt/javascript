@@ -32,6 +32,12 @@
 
     // or use the new ES6 Spread
 
+    const team4 = [...players]
+    team4[3] = 'heeee hawww';
+    console.log(team4);
+
+    const team5 = Array.from(players);
+
     // now when we update it, the original one isn't changed
 
     // The same thing goes for objects, let's say we have a person object
@@ -45,9 +51,12 @@
     // and think we make a copy:
 
     // how do we take a copy instead?
+    const cap2 = Object.assign({}, person, {number: 99});
+    console.log(cap2);
 
     // We will hopefully soon see the object ...spread
-
+    const cap3 = {...person}
+    console.log(cap3);
     // Things to note - this is only 1 level deep - both for Arrays and Objects. lodash has a cloneDeep method, but you should think twice before using it.
 
   </script>
