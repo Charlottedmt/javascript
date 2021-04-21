@@ -23,12 +23,81 @@
       <input type="text" name="item" placeholder="Item Name" required>
       <input type="submit" value="+ Add Item">
     </form>
+    <div class="btn-items">
+      <form class="clear-items">
+        <input type="submit" value="Clear Items">
+      </form>
+      <form class="check-items">
+        <input type="submit" value="Check All Items">
+      </form>
+    </div>
   </div>
 
 <script>
   const addItems = document.querySelector('.add-items');
+  const clearItems = document.querySelector('.clear-items');
+  const checkItems = document.querySelector('.check-items');
   const itemsList = document.querySelector('.plates');
-  const items = [];
+  let items = JSON.parse(localStorage.getItem('items')) || [];
+
+
+
+  const addItem = (event) => {
+    event.preventDefault()
+    console.log(event)
+    const text = event.currentTarget.querySelector('input')
+    const item = {
+      text: text.value,
+      done: false
+    };
+    items.push(item);
+    populateList(items, itemsList);
+    localStorage.setItem('items', JSON.stringify(items))
+    event.currentTarget.reset()
+  }
+
+  const populateList = (plates = [], platesList) => {
+    platesList.innerHTML = plates.map((plate, i) => {
+      return `
+      <li>
+        <input type="checkbox" data-index=${i} id="item${i}" ${plate.done ? 'checked' : ''}>
+        <label for="item${i}">${plate.text}</label>
+      </li>
+      `;
+    }).join('');
+  }
+
+  const toggleDone = (e) => {
+    if(!e.target.matches('input')) return;
+    const el = e.target;
+    const index = el.dataset.index;
+    items[index].done = !items[index].done
+    localStorage.setItem('items', JSON.stringify(items))
+    // populateList(items, itemsList);
+  }
+
+  const clearItem = (e) => {
+    e.preventDefault()
+    itemsList.innerHTML = ''
+    items = []
+    localStorage.setItem('items', JSON.stringify(items))
+  }
+
+   const checkItem = (e) => {
+      e.preventDefault()
+      items.forEach((item) => {
+        item.done = true
+      })
+      populateList(items, itemsList)
+      localStorage.setItem('items', JSON.stringify(items))
+    }
+
+  addItems.addEventListener('submit', addItem)
+  itemsList.addEventListener('click', toggleDone)
+  clearItems.addEventListener('submit', clearItem)
+  checkItems.addEventListener('submit', checkItem)
+
+  populateList(items, itemsList)
 
 </script>
 
